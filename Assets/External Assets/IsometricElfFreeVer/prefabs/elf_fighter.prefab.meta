@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 103d19a1ab2640d45b46564a8829f7db
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 244807
+  packageName: ISOMETRIC_Elf_fighter
+  packageVersion: 1.0
+  assetPath: Assets/IsometricElfFreeVer/prefabs/elf_fighter.prefab
+  uploadId: 569244

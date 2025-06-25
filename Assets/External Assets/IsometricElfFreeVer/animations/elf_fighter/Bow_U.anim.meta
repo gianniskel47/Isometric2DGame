@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 456866dd42e6215429db2a303e2b9b96
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 244807
+  packageName: ISOMETRIC_Elf_fighter
+  packageVersion: 1.0
+  assetPath: Assets/IsometricElfFreeVer/animations/elf_fighter/Bow_U.anim
+  uploadId: 569244

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1fbc3bb319ccb2b4ab4afcd48eb89c12
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 244807
+  packageName: ISOMETRIC_Elf_fighter
+  packageVersion: 1.0
+  assetPath: Assets/IsometricElfFreeVer/prefabs/ArrowController.prefab
+  uploadId: 569244

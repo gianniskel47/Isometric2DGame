@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a8aeb84a911be884dbcab9699b5143cf
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 244807
+  packageName: ISOMETRIC_Elf_fighter
+  packageVersion: 1.0
+  assetPath: Assets/IsometricElfFreeVer/prefabs/StoneController.prefab
+  uploadId: 569244

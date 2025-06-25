@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 17de792673d70c74395ba274b409a0bb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 244807
+  packageName: ISOMETRIC_Elf_fighter
+  packageVersion: 1.0
+  assetPath: Assets/IsometricElfFreeVer/animations/elf_fighter/Item_R.anim
+  uploadId: 569244

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8d3d790684243e64492ba023ca454fba
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 244807
+  packageName: ISOMETRIC_Elf_fighter
+  packageVersion: 1.0
+  assetPath: Assets/IsometricElfFreeVer/animations/elf_fighter/elf_fighter.controller
+  uploadId: 569244
