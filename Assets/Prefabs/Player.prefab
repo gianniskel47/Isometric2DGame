@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1529022878767635816}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &394886737161042625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +75,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameInput: {fileID: 11400000, guid: fb8265fb49a913547822b49bf41af3eb, type: 2}
-  moveSpeed: 1.5
+  maxSpeed: 2
+  slowedSpeed: 0.5
 --- !u!58 &1529022878767635816
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -235,6 +236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1737cbd307b8bb48b87b9a1363183c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 2307939071101615779}
   deadZone: 0.1
-  gameInput: {fileID: 0}
+  gameInput: {fileID: 11400000, guid: fb8265fb49a913547822b49bf41af3eb, type: 2}
