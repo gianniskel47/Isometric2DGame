@@ -1,43 +1,54 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AnimationController : MonoBehaviour
 {
     private const string ISO_DIRECTION = "IsoDirection";
     private const string SPEED = "Speed";
+    private const string TAKE_DAMAGE = "TakeDamage";
 
     [SerializeField] Animator animator;
-    [SerializeField] float deadZone = 0.1f;
-    [SerializeField] SO_GameInput gameInput;
+    [SerializeField] GameObject arrowPrefab;
 
-    private Vector2 input;
     private int lastDirIndex = 0;
+    private Vector2 lastMoveVector = Vector2.right;
 
-    enum IsoDir { NE , NW, SE, SW }
+    enum IsoDir { NE , NW, SE, SW };
 
-    private void OnEnable()
+    public void PlayWalkAnim(Vector2 input)
     {
-        gameInput.MoveEvent += OnMoveInput;
-    }
+        float speed = input.magnitude;
 
-    private void OnDisable()
-    {
-        gameInput.MoveEvent -= OnMoveInput;
-    }
-
-    private void Update()
-    {
-       float speed = input.magnitude;
-       int dirIndex = lastDirIndex;
-
-        if(speed > 0.01)
+        if(speed > 0.01f)
         {
-            dirIndex = GetIsoDirection(input);
+            int dirIndex = GetIsoDirection(input);
             lastDirIndex = dirIndex;
+            lastMoveVector = input.normalized;
         }
-
-        animator.SetFloat(ISO_DIRECTION, dirIndex);
+        animator.SetFloat(ISO_DIRECTION, lastDirIndex);
         animator.SetFloat(SPEED, speed);
+    }
+
+    public void PlayIdleAnim()
+    {
+        animator.SetFloat(ISO_DIRECTION, lastDirIndex);
+        animator.SetFloat(SPEED, 0f);
+    }
+
+    public void PlayAttackAnim()
+    {
+        animator.SetFloat(ISO_DIRECTION, lastDirIndex);
+        animator.SetTrigger("Attack");
+    }
+
+    public void PlayDeathAnim()
+    {
+        animator.SetFloat(ISO_DIRECTION, lastDirIndex);
+        animator.SetTrigger("Death");
+    }
+
+    public void PlayTakeDamageAnim()
+    {
+        animator.SetTrigger(TAKE_DAMAGE);
     }
 
     private int GetIsoDirection(Vector2 input)
@@ -66,8 +77,11 @@ public class AnimationController : MonoBehaviour
         return 0;
     }
 
-    private void OnMoveInput(Vector2 input)
+    // anim event at bow shoot
+    public void SpawnArrow()
     {
-        this.input = input;
+        float angle = Mathf.Atan2(lastMoveVector.y, lastMoveVector.x) * Mathf.Rad2Deg;
+        GameObject arrowInstance = Instantiate(arrowPrefab, transform.position, Quaternion.Euler(0,0,angle + 140));
+        arrowInstance.GetComponent<ArrowProjectile>().SetDirection(lastMoveVector);
     }
 }

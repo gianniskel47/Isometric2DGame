@@ -77,6 +77,9 @@ MonoBehaviour:
   gameInput: {fileID: 11400000, guid: fb8265fb49a913547822b49bf41af3eb, type: 2}
   maxSpeed: 2
   slowedSpeed: 0.5
+  attackDuration: 0.5
+  maxHealth: 8
+  OnPlayerTakeDamage: {fileID: 11400000, guid: 42a832f06bf8b5543a574087acddccfc, type: 2}
 --- !u!58 &1529022878767635816
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -237,5 +240,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2307939071101615779}
-  deadZone: 0.1
-  gameInput: {fileID: 11400000, guid: fb8265fb49a913547822b49bf41af3eb, type: 2}
+  arrowPrefab: {fileID: 1038317180525212310, guid: cb8ec8b593da63948b262d7dc5f6a831, type: 3}

@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class SO_GameInput : ScriptableObject, InputSystem_Actions.IPlayerActions
 {
     public event UnityAction<Vector2> MoveEvent = delegate { };
+    public event UnityAction AttackEvent = delegate { };
     public event UnityAction UseAbilityEvent = delegate { };
 
     private InputSystem_Actions gameInput;
@@ -28,7 +29,10 @@ public class SO_GameInput : ScriptableObject, InputSystem_Actions.IPlayerActions
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        Debug.Log("attack");
+        if (context.performed)
+        {
+            AttackEvent?.Invoke();
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)

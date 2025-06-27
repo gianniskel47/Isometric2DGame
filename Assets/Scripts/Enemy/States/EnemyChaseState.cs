@@ -5,14 +5,14 @@ public class EnemyChaseState : EnemyState
     private Transform playerTransform;
     private float chaseSpeed;
 
-    public EnemyChaseState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine) : base(enemyAI, enemyStateMachine)
+    public EnemyChaseState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine, EnemyAnimationController enemyAnimationController) : base(enemyAI, enemyStateMachine, enemyAnimationController)
     {
         chaseSpeed = enemyAI.ChaseSpeed;
     }
 
     public override void EnterState()
     {
-        enemyAI.PlayPatrolAnim();
+        enemyAnimationController.PlayPatrolAnim();
         playerTransform = enemyAI.DetectedPlayer;
     }
 
@@ -23,10 +23,15 @@ public class EnemyChaseState : EnemyState
 
     public override void Update()
     {
-        Debug.Log("IS CHASING");
         if (enemyAI.IsAttacking)
         {
             enemyAI.StateMachine.ChangeState(enemyAI.AttackState);
+            return;
+        }
+
+        if(enemyAI.CurrentHealth <= 0)
+        {
+            enemyAI.StateMachine.ChangeState(enemyAI.DeathState);
             return;
         }
 

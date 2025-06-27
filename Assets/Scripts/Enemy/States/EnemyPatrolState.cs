@@ -6,7 +6,7 @@ public class EnemyPatrolState : EnemyState
     private float patrolSpeed;
     private Transform currentTarget;
 
-    public EnemyPatrolState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine) : base(enemyAI, enemyStateMachine)
+    public EnemyPatrolState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine, EnemyAnimationController enemyAnimationController) : base(enemyAI, enemyStateMachine, enemyAnimationController)
     {
         patrolPoints = enemyAI.PatrolPoints;
         patrolSpeed = enemyAI.PatrolSpeed;
@@ -33,9 +33,15 @@ public class EnemyPatrolState : EnemyState
             return;
         }
 
+        if (enemyAI.CurrentHealth <= 0)
+        {
+            enemyAI.StateMachine.ChangeState(enemyAI.DeathState);
+            return;
+        }
+
         Vector2 dir = (currentTarget.transform.position - enemyAI.transform.position).normalized;
         enemyAI.MoveEnemy(dir, patrolSpeed);
-        enemyAI.PlayPatrolAnim();
+        enemyAnimationController.PlayPatrolAnim();
 
         if (Vector2.Distance(enemyAI.transform.position, currentTarget.position) < 0.2f)
         {

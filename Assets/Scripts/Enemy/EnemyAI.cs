@@ -4,11 +4,22 @@ public class EnemyAI : MonoBehaviour
 {
     [SerializeField] Animator animator;
 
+    [Header("Config")]
+    [SerializeField] int maxHealth;
+    
     [Header("Patrol State Variables")]
     [SerializeField] Transform[] patrolPoints;
     [SerializeField] float patrolSpeed = 1f;
     public float PatrolSpeed { get => patrolSpeed; }
     public Transform[] PatrolPoints { get => patrolPoints; }
+
+    [Header("Ability Variables")]
+    [SerializeField] float aoeRadius = 2f;
+    [SerializeField] int abilityDamage = 7;
+    [SerializeField] float abilityCooldownMin = 2f;
+    [SerializeField] float abilityCooldownMax = 4f;
+    public float AbilityCooldownMin { get => abilityCooldownMin; }
+    public float AbilityCooldownMax { get => abilityCooldownMax; }
 
 
     [Header("Attack State Variables")]
@@ -35,28 +46,41 @@ public class EnemyAI : MonoBehaviour
     public EnemyChaseState ChaseState { get; set; }
     public EnemyAttackState AttackState { get; set; }
     public EnemyPatrolState PatrolState { get; set; }
+    public EnemyDeathState DeathState { get; set; }
+
+
+    [Header("Broadcasting to")]
+    [SerializeField] SO_VoidEventChannel OnEnemyTakeDamage;
+    [SerializeField] SO_VoidEventChannel OnEnemyDied;
 
     public bool IsChasing { get; set; }
     public bool IsAttacking { get; set; }
     public Transform DetectedPlayer { get; set; }
     public int LastMoveDirection { get; set; }
+    public int CurrentHealth { get; set; }
 
     private Rigidbody2D rb;
-    
+    private EnemyAnimationController enemyAnimationController;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        enemyAnimationController = GetComponentInChildren<EnemyAnimationController>();
 
         StateMachine = new EnemyStateMachine();
-        IdleState = new EnemyIdleState(this, StateMachine);
-        ChaseState = new EnemyChaseState(this, StateMachine);
-        AttackState = new EnemyAttackState(this, StateMachine);
-        PatrolState = new EnemyPatrolState(this, StateMachine);
+        IdleState = new EnemyIdleState(this, StateMachine, enemyAnimationController);
+        ChaseState = new EnemyChaseState(this, StateMachine, enemyAnimationController);
+        AttackState = new EnemyAttackState(this, StateMachine, enemyAnimationController);
+        PatrolState = new EnemyPatrolState(this, StateMachine, enemyAnimationController);
+        DeathState = new EnemyDeathState(this, StateMachine, enemyAnimationController);
     }
 
     private void Start()
     {
         StateMachine.Initialize(IdleState);
+        CurrentHealth = maxHealth;
+
+        OnEnemyTakeDamage.RaiseEvent(CurrentHealth);
     }
 
     private void Update()
@@ -77,6 +101,37 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        CurrentHealth -= damage;
+        enemyAnimationController.PlayTakeDamageAnim();
+
+        if(CurrentHealth <= 0)
+        {
+            CurrentHealth = 0;
+            Death();
+        }
+
+        OnEnemyTakeDamage.RaiseEvent(CurrentHealth);
+    }
+
+    public void DoAoeDamage()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, aoeRadius);
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                hit.GetComponent<PlayerController>().TakeDamage(abilityDamage);
+            }
+        }
+    }
+
+    private void Death()
+    {
+        OnEnemyDied.RaiseEvent();
+    }
+
     public int GetIsoDirection(Vector2 dir)
     {
         if (dir == Vector2.zero) return LastMoveDirection;
@@ -87,7 +142,7 @@ public class EnemyAI : MonoBehaviour
             return 0;    // SW
         }
 
-        if (angle >= 45 && angle < 135) 
+        if (angle >= 45 && angle < 135)
         {
             return 1;    // NE
         }
@@ -100,7 +155,7 @@ public class EnemyAI : MonoBehaviour
         if (angle >= 225 && angle < 315)
         {
             return 3;   // SE
-        } 
+        }
         return 0;
     }
 
@@ -114,32 +169,9 @@ public class EnemyAI : MonoBehaviour
         IsAttacking = isAttacking;
     }
 
-    public void PlayIdleAnim()
+    private void OnDrawGizmos()
     {
-        animator.Play("Idle_" + DirToString(LastMoveDirection));
-    }
-
-    public void PlayPatrolAnim()
-    {
-        animator.Play("Walk_" + DirToString(LastMoveDirection));
-    }
-
-    public void PlayAttackAnim()
-    {
-        // normalized time var because if this the active animation already
-        // then if I call it again it wont play from the start by default.
-        animator.Play("Attack_" + DirToString(LastMoveDirection), 0, 0f);
-    }
-
-    private string DirToString(int direction)
-    {
-        switch (direction)
-        {
-            case 0: return "SW";
-            case 1: return "NE";
-            case 2: return "NW";
-            case 3: return "SE";
-            default: return "NE";
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, aoeRadius);
     }
 }
