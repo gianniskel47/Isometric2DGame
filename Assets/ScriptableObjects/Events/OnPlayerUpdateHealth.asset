@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42cc42844191c4c40a665a560986c783, type: 3}
-  m_Name: OnPlayerTakeDamge
+  m_Name: OnPlayerUpdateHealth
   m_EditorClassIdentifier: 
   description: "an event firing whenever the player takes damage \nparameter passing
     is INT (health)"

@@ -6,6 +6,9 @@ public class EnemyPatrolState : EnemyState
     private float patrolSpeed;
     private Transform currentTarget;
 
+    //passing the values we need through the constructor from the player
+    // I could also set them directly in here but  I could not modify them since
+    // this is not monobehavior so the values were going to be hard coded
     public EnemyPatrolState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine, EnemyAnimationController enemyAnimationController) : base(enemyAI, enemyStateMachine, enemyAnimationController)
     {
         patrolPoints = enemyAI.PatrolPoints;

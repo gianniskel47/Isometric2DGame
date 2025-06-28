@@ -8,6 +8,9 @@ public class EnemyIdleState : EnemyState
     private float timeToIdle;
     private float counter = 0;
 
+    //passing the values we need through the constructor from the player
+    // I could also set them directly in here but  I could not modify them since
+    // this is not monobehavior so the values were going to be hard coded
     public EnemyIdleState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine, EnemyAnimationController enemyAnimationController) : base(enemyAI, enemyStateMachine, enemyAnimationController)
     {
         maxTimeIdling = enemyAI.MaxTimeIdling;
@@ -16,6 +19,8 @@ public class EnemyIdleState : EnemyState
 
     public override void EnterState()
     {
+        //imobilizing enemy and playing animation
+        // randomize the time to sit idle
         enemyAnimationController.PlayIdleAnim();
         enemyAI.MoveEnemy(new Vector2(0, 0), 0);
         timeToIdle = Random.Range(minTimeIdling, maxTimeIdling);
@@ -42,6 +47,7 @@ public class EnemyIdleState : EnemyState
         }
 
         counter += Time.deltaTime;
+        // if the time to sit idle is reached change to patrol state and so move to the next point
         if(counter >= timeToIdle)
         {
             enemyAI.StateMachine.ChangeState(enemyAI.PatrolState);

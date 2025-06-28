@@ -21,6 +21,7 @@ public class ArrowProjectile : MonoBehaviour
         }
     }
 
+    // when spawning we are giving the correct direction the player is facing
     public void SetDirection(Vector2 dir)
     {
         this.dir = dir;
@@ -34,6 +35,7 @@ public class ArrowProjectile : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //kill the arrow if it goes out of bounds
         if (collision.CompareTag("arrowKiller"))
         {
             Destroy(gameObject);

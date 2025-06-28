@@ -10,10 +10,11 @@ public class EnemyAttackState : EnemyState
     private float abilityCounter = 0f;
     private bool isNormalAttacking = false;
     private bool isPerformingAbility = false;
-    private bool isFirstTimeAttacking = true; // we need this to check if its the 1st time attacking
-                                              // so the 1st time it goes on EnterState the enemy should 
-                                              //attack immediately. then the counter handles it
+    private bool isFirstTimeAttacking = true; 
 
+    //passing the values we need through the constructor from the player
+    // I could also set them directly in here but  I could not modify them since
+    // this is not monobehavior so the values were going to be hard coded
     public EnemyAttackState(EnemyAI enemyAI, EnemyStateMachine enemyStateMachine, EnemyAnimationController enemyAnimationController) : base(enemyAI, enemyStateMachine, enemyAnimationController)
     {
         attackCooldown = enemyAI.AttackCooldown;
@@ -24,12 +25,15 @@ public class EnemyAttackState : EnemyState
     public override void EnterState()
     {
         currentAbilityCooldown = Random.Range(abilityCooldownMin, abilityCooldownMax);
+        // imobilizing the enemy to attack
         enemyAI.MoveEnemy(new Vector2(0, 0), 0);
         enemyAnimationController.PlayIdleAnim();
 
+        // we need this to check if its the 1st time attacking
+        // so the 1st time it goes on EnterState the enemy should 
+        //attack immediately. then the counter handles it
         if (isFirstTimeAttacking)
         {
-            Debug.Log("AAAA");
             enemyAnimationController.PlayAttackAnim(() => NormalAttackFinished());
             isFirstTimeAttacking = false;
         }
@@ -41,8 +45,11 @@ public class EnemyAttackState : EnemyState
 
     public override void Update()
     {
+        //imobilize enemy while on attack
         enemyAI.MoveEnemy(new Vector2(0, 0), 0);
 
+        //if player is within chase range and the player is outside of attack range
+        // and the enemy is NOT performing the ability then transition to chase state
         if (enemyAI.IsChasing && !enemyAI.IsAttacking && !isPerformingAbility)
         {
             enemyAI.StateMachine.ChangeState(enemyAI.ChaseState);

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// this script is responsible for the player's logic
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
@@ -12,14 +13,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int maxHealth = 8;
 
     [Header("Broadcasting to")]
-    [SerializeField] SO_VoidEventChannel OnPlayerTakeDamage;
+    [SerializeField] SO_VoidEventChannel OnPlayerUpdateHealth;
     [SerializeField] SO_VoidEventChannel OnPlayerDied;
 
     private int currentHealth;
     private float attackTimer = 0f;
     private Vector2 moveInput;
     private Rigidbody2D rb;
-    private CircleCollider2D collider;
+    private CircleCollider2D playerCollider;
     private float moveSpeed = 0f;
     private bool isSlowed;
     private bool isAttacking;
@@ -35,20 +36,21 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         gameInput.MoveEvent -= OnMoveInput;
+        gameInput.AttackEvent -= OnAttackInput;
     }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<AnimationController>();
-        collider = GetComponent<CircleCollider2D>();
+        playerCollider = GetComponent<CircleCollider2D>();
     }
 
     private void Start()
     {
         currentHealth = maxHealth;
 
-        OnPlayerTakeDamage.RaiseEvent(currentHealth);
+        OnPlayerUpdateHealth.RaiseEvent(currentHealth);
     }
 
     private void OnMoveInput(Vector2 input)
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttackInput()
     {
+        // if he is attacking he cannot attack again on top of that
         if (isAttacking) return;
 
         isAttacking = true;
@@ -71,11 +74,13 @@ public class PlayerController : MonoBehaviour
 
         if (isAttacking)
         {
+            //cooldown on attacks
             rb.linearVelocity = Vector2.zero;
             attackTimer -= Time.fixedDeltaTime;
             if (attackTimer <= 0)
             {
                 isAttacking = false; //attacking is over
+                attackTimer = attackDuration;
             }
             return;
         }
@@ -97,6 +102,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // player loses health
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -108,18 +114,20 @@ public class PlayerController : MonoBehaviour
             Death();
         }
 
-        OnPlayerTakeDamage.RaiseEvent(currentHealth);
+        OnPlayerUpdateHealth.RaiseEvent(currentHealth);
     }
 
+    // called when player dies
     private void Death()
     {
-        collider.isTrigger = true;
+        playerCollider.isTrigger = true;
         transform.tag = "Untagged";
         isDead = true;
         animationController.PlayDeathAnim();
         OnPlayerDied.RaiseEvent();
     }
 
+    //slow effect
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("plant"))
@@ -128,6 +136,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //slow effect
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("plant"))
@@ -136,6 +145,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //slow effect
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("plant"))

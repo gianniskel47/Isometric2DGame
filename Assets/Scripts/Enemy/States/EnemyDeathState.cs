@@ -10,12 +10,14 @@ public class EnemyDeathState : EnemyState
 
     public override void EnterState()
     {
+        //imobilize enemy, play animation
         enemyAI.MoveEnemy(new Vector2(0, 0), 0);
         enemyAnimationController.PlayDeathAnim();
     }
 
     public override void Update()
     {
+        // cannot transition from this state to any other state.
         enemyAI.MoveEnemy(new Vector2(0, 0), 0);
     }
 }

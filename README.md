@@ -11,7 +11,7 @@ A unity 2D isometric game demo created for the Runic Dices technical trial (comp
 
 ## Setup
 
-1) Open with Unity 6000.0.28f1
+1) Open with Unity 6000.0.24f1
 2) Install dependencies if prompted (input system, cinemacine)
 3) Run the project
 

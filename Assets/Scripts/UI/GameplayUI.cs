@@ -29,6 +29,14 @@ public class GameplayUI : MonoBehaviour
         OnPlayerWon.OnEventRaised += OnPlayerWon_OnEventRaised;
     }
 
+    private void OnDisable()
+    {
+        OnEnemyTakeDamage.OnEventRaised -= OnEnemyTakeDamage_OnEventRaised;
+        OnPlayerTakeDamage.OnEventRaised -= OnPlayerTakeDamage_OnEventRaised;
+        OnPlayerDied.OnEventRaised -= OnPlayerDied_OnEventRaised;
+        OnPlayerWon.OnEventRaised -= OnPlayerWon_OnEventRaised;
+    }
+
     private void OnPlayerWon_OnEventRaised(object obj)
     {
         winningScreen.gameObject.SetActive(true);
@@ -53,6 +61,7 @@ public class GameplayUI : MonoBehaviour
         enemyHealthText.text = $"ENEMY'S HEALTH: {health}";
     }
 
+    // fade the apropriate screen
     private IEnumerator FadeScreenCoroutine(float from, float to, float duration, CanvasGroup screen)
     {
         yield return new WaitForSeconds(1.5f);
@@ -72,6 +81,7 @@ public class GameplayUI : MonoBehaviour
         StartCoroutine(ReloadSceneCountdown());
     }
 
+    // restart the game after a counter
     private IEnumerator ReloadSceneCountdown()
     {
         restartGameTimerText.gameObject.SetActive(true);

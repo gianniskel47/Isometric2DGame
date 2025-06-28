@@ -86,6 +86,8 @@ public class EnemyAnimationController : MonoBehaviour
     }
     #endregion
 
+    // helping function to convert the int (which is the converted move input to iso orientation)
+    // to the corresponding string Orientation, similar to what we did with the player but without the enum
     private string DirToString(int direction)
     {
         switch (direction)
@@ -94,7 +96,7 @@ public class EnemyAnimationController : MonoBehaviour
             case 1: return "NE";
             case 2: return "NW";
             case 3: return "SE";
-            default: return "NE";
+            default: return "SW";
         }
     }
 }

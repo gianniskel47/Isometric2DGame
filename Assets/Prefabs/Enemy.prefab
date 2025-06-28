@@ -290,12 +290,17 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   patrolSpeed: 0.5
-  attackDamage: 3
+  aoeRadius: 1.5
+  abilityDamage: 7
+  abilityCooldownMin: 3
+  abilityCooldownMax: 9
+  attackDamage: 1
   attackCooldown: 2
   chaseSpeed: 1.5
   maxTimeIdling: 8
   minTimeIdling: 2
-  OnEnemyTakeDamage: {fileID: 11400000, guid: 21bac4c345d44bf4c970c426e3fcb5b4, type: 2}
+  OnEnemyUpdateHealth: {fileID: 11400000, guid: 21bac4c345d44bf4c970c426e3fcb5b4, type: 2}
+  OnEnemyDied: {fileID: 11400000, guid: 79c7d9a91b75eee4d810c4c2cb36c3fd, type: 2}
 --- !u!58 &5645707875735391323
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -400,7 +405,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.35
 --- !u!114 &5818485408762690332
 MonoBehaviour:
   m_ObjectHideFlags: 0

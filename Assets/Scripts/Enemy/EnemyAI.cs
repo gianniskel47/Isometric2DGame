@@ -28,6 +28,7 @@ public class EnemyAI : MonoBehaviour
     public int AttackDamage { get => attackDamage; }
     public float AttackCooldown { get => attackCooldown; }
 
+
     [Header("Chase State Variables")]
     [SerializeField] float chaseSpeed = 2f;
     public float ChaseSpeed { get => chaseSpeed; }
@@ -50,7 +51,7 @@ public class EnemyAI : MonoBehaviour
 
 
     [Header("Broadcasting to")]
-    [SerializeField] SO_VoidEventChannel OnEnemyTakeDamage;
+    [SerializeField] SO_VoidEventChannel OnEnemyUpdateHealth;
     [SerializeField] SO_VoidEventChannel OnEnemyDied;
 
     public bool IsChasing { get; set; }
@@ -61,11 +62,14 @@ public class EnemyAI : MonoBehaviour
 
     private Rigidbody2D rb;
     private EnemyAnimationController enemyAnimationController;
+    private CircleCollider2D enemyCollider;
+
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         enemyAnimationController = GetComponentInChildren<EnemyAnimationController>();
+        enemyCollider = GetComponent<CircleCollider2D>();
 
         StateMachine = new EnemyStateMachine();
         IdleState = new EnemyIdleState(this, StateMachine, enemyAnimationController);
@@ -77,10 +81,11 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        //set the starting state
         StateMachine.Initialize(IdleState);
         CurrentHealth = maxHealth;
 
-        OnEnemyTakeDamage.RaiseEvent(CurrentHealth);
+        OnEnemyUpdateHealth.RaiseEvent(CurrentHealth);
     }
 
     private void Update()
@@ -96,6 +101,8 @@ public class EnemyAI : MonoBehaviour
             int newDir = GetIsoDirection(dir);
             if(newDir != LastMoveDirection)
             {
+                // setting this to help with the animations to face the right direction
+                // just like what we did with the player
                 LastMoveDirection = GetIsoDirection(dir);
             }
         }
@@ -112,9 +119,10 @@ public class EnemyAI : MonoBehaviour
             Death();
         }
 
-        OnEnemyTakeDamage.RaiseEvent(CurrentHealth);
+        OnEnemyUpdateHealth.RaiseEvent(CurrentHealth);
     }
 
+    // ability logic to deal AOE damage on a circle around him
     public void DoAoeDamage()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, aoeRadius);
@@ -129,9 +137,12 @@ public class EnemyAI : MonoBehaviour
 
     private void Death()
     {
+        enemyCollider.enabled = false;
         OnEnemyDied.RaiseEvent();
     }
 
+    // helping function to convert the input to the correcponding orientation
+    // to assign to "LastMoveDirection" variable to be used for animations etc
     public int GetIsoDirection(Vector2 dir)
     {
         if (dir == Vector2.zero) return LastMoveDirection;
@@ -169,6 +180,7 @@ public class EnemyAI : MonoBehaviour
         IsAttacking = isAttacking;
     }
 
+    // helping function to visualize the AOE ability damage range
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

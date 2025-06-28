@@ -9,6 +9,8 @@ public class AnimationController : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] GameObject arrowPrefab;
 
+    //we keep track of the last input (converted to isometric)
+    //so the next animation to play is going to face the correct way
     private int lastDirIndex = 0;
     private Vector2 lastMoveVector = Vector2.right;
 
@@ -51,6 +53,15 @@ public class AnimationController : MonoBehaviour
         animator.SetTrigger(TAKE_DAMAGE);
     }
 
+    // anim event at bow shoot
+    public void SpawnArrow()
+    {
+        float angle = Mathf.Atan2(lastMoveVector.y, lastMoveVector.x) * Mathf.Rad2Deg;
+        GameObject arrowInstance = Instantiate(arrowPrefab, transform.position, Quaternion.Euler(0, 0, angle + 140));
+        arrowInstance.GetComponent<ArrowProjectile>().SetDirection(lastMoveVector);
+    }
+
+    // we are converting the input (from moving) to isometric
     private int GetIsoDirection(Vector2 input)
     {
         float angle = Mathf.Atan2(input.y , input.x) * Mathf.Rad2Deg;
@@ -75,13 +86,5 @@ public class AnimationController : MonoBehaviour
             return (int)IsoDir.SW;
         }
         return 0;
-    }
-
-    // anim event at bow shoot
-    public void SpawnArrow()
-    {
-        float angle = Mathf.Atan2(lastMoveVector.y, lastMoveVector.x) * Mathf.Rad2Deg;
-        GameObject arrowInstance = Instantiate(arrowPrefab, transform.position, Quaternion.Euler(0,0,angle + 140));
-        arrowInstance.GetComponent<ArrowProjectile>().SetDirection(lastMoveVector);
     }
 }
